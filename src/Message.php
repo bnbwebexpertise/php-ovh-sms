@@ -213,13 +213,14 @@ class Message
      * Set the sender of the message after checking it is a valid sender
      *
      * @param string $sender sender of the message
+     * @param string $check  check the sender and throw exception if not configured
      *
      * @return void
      * @throws \Ovh\Exceptions\InvalidParameterException if sender is invalid
      */
-    public function setSender($sender)
+    public function setSender($sender, $check = true)
     {
-        if (!$this->Sms->checkSender($sender)) {
+        if ($check && !$this->Sms->checkSender($sender)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Sender parameter is invalid");
         }
 
