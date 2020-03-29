@@ -589,13 +589,13 @@ class SmsApi
      * @return void
      * @throws \GuzzleHttp\Exception\ClientException if http request returns an error
      */
-    public function setAccount($account)
+    public function setAccount($account, $check = true)
     {
         if (!isset($account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Account parameter is empty");
         }
 
-        if (!$this->checkAccount($account)) {
+        if ($check && !$this->checkAccount($account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Account parameter is invalid");
         }
 
