@@ -432,6 +432,27 @@ class SmsApi
     }
 
     /**
+     * Get outgoing messages
+     *
+     * @param DateTime $id Message ID
+     *
+     * @return Sms
+     * @throws \GuzzleHttp\Exception\ClientException     if http request returns an error
+     * @throws \Ovh\Exceptions\InvalidParameterException if account is not set or parameters are invalid
+     */
+    public function getOutgoingMessage($id)
+    {
+        if (is_null($this->account)) {
+            throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
+        }
+
+        // Get messages
+        $message = $this->conn->get($this->getUri() . "outgoing/" . $id);
+
+        return new Sms($this, "outgoing", $message);
+    }
+
+    /**
      * Get planned
      *
      * @return array
