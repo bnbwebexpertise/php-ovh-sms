@@ -144,7 +144,8 @@ class Sms
     public function __construct(
         $SmsApi,
         $type,
-        $id
+        $id,
+        $message = null
     ) {
         if (!isset($SmsApi)) {
             throw new \Ovh\Exceptions\InvalidParameterException("SmsApi parameter is empty");
@@ -162,6 +163,7 @@ class Sms
         $this->Sms              = $SmsApi;
         $this->type             = $type;
         $this->id               = $id;
+        $this->message          = $message;
     }
 
 
@@ -196,7 +198,7 @@ class Sms
      */
     public function getDeliveryDetails()
     {
-        $details = $this->Sms->getConnection('/sms/ptts', (object) array("ptt" => $this->ptt));
+        $details = $this->Sms->getConnection()->get('/sms/ptts', (object) ["ptt" => $this->ptt]);
 
         return $details['comment'];
     }
@@ -242,7 +244,7 @@ class Sms
      */
     public function getMessageLength()
     {
-        return count($this->message);
+        return strlen($this->message);
     }
 
 
@@ -330,7 +332,7 @@ class Sms
         $this->sendDateTime     = null;
         $this->tag              = $messageDetails['tag'];
 
-        if (in_array($this->type, array('planned', 'outgoing'))) {
+        if (in_array($this->type, ['planned', 'outgoing'])) {
             $this->ptt              = $messageDetails['ptt'];
             $this->deliveryReceipt  = $messageDetails['deliveryReceipt'];
             $this->sendDateTime     = $this->creationDateTime;

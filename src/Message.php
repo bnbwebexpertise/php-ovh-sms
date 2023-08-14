@@ -156,7 +156,7 @@ class Message
         $coding = ($this->is_gsm0338($message) ? '7bit' : '8bit');
 
         // Prepare request parameters
-        $parameters = (object) array('message' => $message, 'receivers' => $this->receivers, 'noStopClause' => !$this->isMarketing, 'differedPeriod' => $differedPeriod, 'coding' => $coding, 'tag' => $this->tag);
+        $parameters = (object) ['message' => $message, 'receivers' => $this->receivers, 'noStopClause' => !$this->isMarketing, 'differedPeriod' => $differedPeriod, 'coding' => $coding, 'tag' => $this->tag];
 
         // Manage sender
         if ($this->sender) {

@@ -61,7 +61,7 @@ class SmsApi
      */
     private $account = null;
 
-     /**
+    /**
      * User
      *
      * @var string
@@ -117,7 +117,7 @@ class SmsApi
             throw new \Ovh\Exceptions\InvalidParameterException("Reason parameter is empty");
         }
 
-        $parameters = (object) array("sender" => $sender, "reason" => $reason, "description" => $description);
+        $parameters = (object) ["sender" => $sender, "reason" => $reason, "description" => $description];
 
         return $this->conn->post("/sms/".$this->account."/senders", $parameters);
     }
@@ -337,7 +337,7 @@ class SmsApi
         }
 
         // Check and prepare parameters
-        $parameters = array();
+        $parameters = [];
 
         if (!is_null($startDateTime)) {
             if (!is_a($startDateTime, "DateTime")) {
@@ -368,7 +368,7 @@ class SmsApi
         $messages = $this->conn->get($this->getUri() . "incoming", (object) $parameters);
 
         foreach ($messages as $id => $message) {
-            $messages[$id] = new Sms($this, "incoming", $message);
+            $messages[$id] = new Sms($this, "incoming", $id, $message);
         }
 
         return $messages;
@@ -388,7 +388,7 @@ class SmsApi
      * @throws \GuzzleHttp\Exception\ClientException     if http request returns an error
      * @throws \Ovh\Exceptions\InvalidParameterException if account is not set or parameters are invalid
      */
-    public function getOutgoingMessages($dateStart = null, $dateEnd = null, $sender = null, $receiver = null, $tag = null)
+    public function getOutgoingMessages($startDateTime = null, $endDateTime = null, $sender = null, $receiver = null, $tag = null)
     {
         if (is_null($this->account)) {
             throw new \Ovh\Exceptions\InvalidParameterException("Please set account before using this function");
@@ -425,7 +425,7 @@ class SmsApi
         $messages = $this->conn->get($this->getUri() . "outgoing", (object) $parameters);
 
         foreach ($messages as $id => $message) {
-            $messages[$id] = new Sms($this, "outgoing", $message);
+            $messages[$id] = new Sms($this, "outgoing", $id, $message);
         }
 
         return $messages;
@@ -449,7 +449,7 @@ class SmsApi
         // Get messages
         $message = $this->conn->get($this->getUri() . "outgoing/" . $id);
 
-        return new Sms($this, "outgoing", $message);
+        return new Sms($this, "outgoing", $id, $message);
     }
 
     /**
@@ -469,7 +469,7 @@ class SmsApi
         $messages = $this->conn->get($this->getUri() . "jobs");
 
         foreach ($messages as $id => $message) {
-            $messages[$id] = new Sms($this, "jobs", $message);
+            $messages[$id] = new Sms($this, "jobs", $id, $message);
         }
 
         return $messages;
@@ -504,7 +504,7 @@ class SmsApi
             throw new \Ovh\Exceptions\InvalidParameterException("Quantity parameter is empty");
         }
 
-        $parameters = array("countryDestination" => $country, "countryCurrencyPrice" => $countryCurrency, "quantity" => $quantity);
+        $parameters = ["countryDestination" => $country, "countryCurrencyPrice" => $countryCurrency, "quantity" => $quantity];
 
         return $this->conn->get("/sms/".$this->account."/seeOffers", (object) $parameters);
     }
